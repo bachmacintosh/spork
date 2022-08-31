@@ -37,7 +37,7 @@
 		"i18next": "21.9.1",
 		"node-fetch": "^3.2.10",
 		"pino": "8.4.2",
-		"pino-pretty": "8.1.0",
+		"pino-pretty": "9.1.0",
 		"utf-8-validate": "5.0.9",
 		"zlib-sync": "0.1.7"
 	},
