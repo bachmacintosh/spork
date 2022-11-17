@@ -1,18 +1,17 @@
 import type { LocaleString } from "discord.js";
 import type { TFunctionCollection } from "../types/lang/TFunctionCollection.js";
-import enUSCommands from "../lang/en-US/commands.json" assert { type: "json" };
 import i18next from "i18next";
+import { resources } from "../lang/config.js";
 
 function missingKey(lngs: readonly string[], ns: string, key: string): void {
 	throw new Error(`Key ${ns}:${key} missing from translattion`);
 }
 
 export default async function loadLanguages(): Promise<TFunctionCollection> {
-	const options: i18next.InitOptions = {
+	const options = {
 		fallbackLng: "en-US",
-		ns: ["commands"],
 		returnObjects: true,
-		resources: { "en-US": { commands: enUSCommands } },
+		resources,
 		saveMissing: true,
 		missingKeyHandler: missingKey,
 	};

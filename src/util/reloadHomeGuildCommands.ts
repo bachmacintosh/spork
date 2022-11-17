@@ -12,6 +12,7 @@ export default async function reloadHomeGuildCommands(bot: Bot): Promise<void> {
 			if (typeof command.data === "undefined") {
 				throw new Error("(registerHomeGuildCommands) Command data not fully initialized!");
 			}
+			logger.debug(command.data.toJSON());
 			guildCommands.push(command.data.toJSON());
 		}
 	});
