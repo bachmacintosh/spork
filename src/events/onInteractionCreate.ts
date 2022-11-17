@@ -26,7 +26,7 @@ export default async function onInteractionCreate(bot: Bot, interaction: Interac
 			}
 		});
 		if (typeof command === "undefined") {
-			await interaction.reply(t("commands:notFound", { command: interaction.commandName }));
+			await interaction.reply(t("commands.notFound", { command: interaction.commandName }));
 		} else {
 			await command.run(bot, interaction, t);
 		}

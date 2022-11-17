@@ -1,4 +1,4 @@
-import type { APIEmbedField } from "discord.js";
+import type { APIEmbedField, LocaleString } from "discord.js";
 import type Bot from "../types/Bot.js";
 import type Command from "../types/commands/Command.js";
 import { SlashCommandBuilder } from "discord.js";
@@ -6,17 +6,26 @@ import buildEmbed from "../embeds/buildEmbed.js";
 import countGuilds from "../data/guilds/countGuilds.js";
 import findOrCreateGuild from "../data/guilds/findOrCreateGuild.js";
 import getUsage from "../random-dot-org/getUsage.js";
-import localizeLabels from "../util/localizeLabels.js";
+import setLocales from "../util/setLocales.js";
 
 const info: Command = {
 	init: (tFunctions) => {
-		const builder = new SlashCommandBuilder().setDefaultMemberPermissions("0");
-		return localizeLabels(builder, tFunctions, "commands:info") as SlashCommandBuilder;
+		let builder = new SlashCommandBuilder().setDefaultMemberPermissions("0");
+		for (const [key, t] of Object.entries(tFunctions)) {
+			const locale = key as LocaleString;
+			builder = setLocales(
+				builder,
+				locale,
+				t(`commands.info.name`),
+				t(`commands.info.description`),
+			) as SlashCommandBuilder;
+		}
+		return builder;
 	},
 	run: async (bot: Bot, interaction, t) => {
 		await interaction.deferReply({ ephemeral: true });
 		if (interaction.guild === null) {
-			await interaction.editReply(t("commands:info.noDirectMessage"));
+			await interaction.editReply(t("commands.info.noDirectMessage"));
 		} else {
 			const bitsLeftThreshold = 1000;
 			const requestsLeftThreshold = 100;
@@ -27,24 +36,24 @@ const info: Command = {
 			if (sporkGuild.randomizationMode === "Pseudorandom") {
 				fields.push(
 					{
-						name: t("commands:info.status"),
-						value: t("commands:info.statusOk"),
+						name: t("commands.info.status"),
+						value: t("commands.info.statusOk"),
 					},
 					{
-						name: t("commands:info.mode"),
-						value: t("commands:info.modePseudorandom"),
+						name: t("commands.info.mode"),
+						value: t("commands.info.modePseudorandom"),
 					},
 				);
 			} else if (sporkGuild.randomApiKey === null) {
 				status = "warn";
 				fields.push(
 					{
-						name: t("commands:info.status"),
-						value: t("commands:info.statusApiKeyMissing"),
+						name: t("commands.info.status"),
+						value: t("commands.info.statusApiKeyMissing"),
 					},
 					{
-						name: t("commands:info.mode"),
-						value: t("commands:info.modeRandomUnavailable"),
+						name: t("commands.info.mode"),
+						value: t("commands.info.modeRandomUnavailable"),
 					},
 				);
 			} else {
@@ -53,26 +62,26 @@ const info: Command = {
 					if (typeof apiKeyStatus.result === "undefined") {
 						status = "error";
 						fields.push({
-							name: t("commands:info.status"),
-							value: t("commands:info.statusRandomDotOrgError"),
+							name: t("commands.info.status"),
+							value: t("commands.info.statusRandomDotOrgError"),
 						});
 					} else if (apiKeyStatus.result.status === "stopped") {
 						status = "warn";
 						fields.push(
 							{
-								name: t("commands:info.status"),
-								value: t("commands:info.statusApiKeyStopped"),
+								name: t("commands.info.status"),
+								value: t("commands.info.statusApiKeyStopped"),
 							},
 							{
-								name: t("commands:info.mode"),
-								value: t("commands:info.modeRandomUnavailable"),
+								name: t("commands.info.mode"),
+								value: t("commands.info.modeRandomUnavailable"),
 							},
 							{
-								name: t("commands:info.bitsLeft"),
+								name: t("commands.info.bitsLeft"),
 								value: new Intl.NumberFormat(interaction.locale).format(apiKeyStatus.result.bitsLeft),
 							},
 							{
-								name: t("commands:info.requestsLeft"),
+								name: t("commands.info.requestsLeft"),
 								value: new Intl.NumberFormat(interaction.locale).format(apiKeyStatus.result.requestsLeft),
 							},
 						);
@@ -83,19 +92,19 @@ const info: Command = {
 						status = "warn";
 						fields.push(
 							{
-								name: t("commands:info.status"),
-								value: t("commands:info.statusApiKeyLow"),
+								name: t("commands.info.status"),
+								value: t("commands.info.statusApiKeyLow"),
 							},
 							{
-								name: t("commands:info.mode"),
-								value: t("commands:info.modeRandom"),
+								name: t("commands.info.mode"),
+								value: t("commands.info.modeRandom"),
 							},
 							{
-								name: t("commands:info.bitsLeft"),
+								name: t("commands.info.bitsLeft"),
 								value: new Intl.NumberFormat(interaction.locale).format(apiKeyStatus.result.bitsLeft),
 							},
 							{
-								name: t("commands:info.requestsLeft"),
+								name: t("commands.info.requestsLeft"),
 								value: new Intl.NumberFormat(interaction.locale).format(apiKeyStatus.result.requestsLeft),
 							},
 						);
@@ -103,38 +112,38 @@ const info: Command = {
 						status = "warn";
 						fields.push(
 							{
-								name: t("commands:info.status"),
-								value: t("commands:info.statusApiKeyExhausted"),
+								name: t("commands.info.status"),
+								value: t("commands.info.statusApiKeyExhausted"),
 							},
 							{
-								name: t("commands:info.mode"),
-								value: t("commands:info.modeRandomUnavailable"),
+								name: t("commands.info.mode"),
+								value: t("commands.info.modeRandomUnavailable"),
 							},
 							{
-								name: t("commands:info.bitsLeft"),
+								name: t("commands.info.bitsLeft"),
 								value: new Intl.NumberFormat(interaction.locale).format(apiKeyStatus.result.bitsLeft),
 							},
 							{
-								name: t("commands:info.requestsLeft"),
+								name: t("commands.info.requestsLeft"),
 								value: new Intl.NumberFormat(interaction.locale).format(apiKeyStatus.result.requestsLeft),
 							},
 						);
 					} else {
 						fields.push(
 							{
-								name: t("commands:info.status"),
-								value: t("commands:info.statusOk"),
+								name: t("commands.info.status"),
+								value: t("commands.info.statusOk"),
 							},
 							{
-								name: t("commands:info.mode"),
-								value: t("commands:info.modeRandom"),
+								name: t("commands.info.mode"),
+								value: t("commands.info.modeRandom"),
 							},
 							{
-								name: t("commands:info.bitsLeft"),
+								name: t("commands.info.bitsLeft"),
 								value: new Intl.NumberFormat(interaction.locale).format(apiKeyStatus.result.bitsLeft),
 							},
 							{
-								name: t("commands:info.requestsLeft"),
+								name: t("commands.info.requestsLeft"),
 								value: new Intl.NumberFormat(interaction.locale).format(apiKeyStatus.result.requestsLeft),
 							},
 						);
@@ -142,15 +151,15 @@ const info: Command = {
 				} catch (error) {
 					status = "error";
 					fields.push({
-						name: t("commands:info.status"),
-						value: t("commands:info.statusRandomDotOrgError"),
+						name: t("commands.info.status"),
+						value: t("commands.info.statusRandomDotOrgError"),
 					});
 				}
 			}
 
 			const options = {
-				title: t("commands:info.title"),
-				description: t("commands:info.guilds", { count: numberOfGuilds }),
+				title: t("commands.info.title"),
+				description: t("commands.info.guilds", { count: numberOfGuilds }),
 				status,
 				fields,
 			};

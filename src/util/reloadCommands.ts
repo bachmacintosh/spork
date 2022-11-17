@@ -13,6 +13,7 @@ export default async function reloadCommands(bot: Bot): Promise<void> {
 			if (typeof command.data === "undefined") {
 				throw new Error("(registerCommands) Command data not fully initialized!");
 			}
+			logger.debug(command.data.toJSON());
 			globalCommands.push(command.data.toJSON());
 		}
 	});
