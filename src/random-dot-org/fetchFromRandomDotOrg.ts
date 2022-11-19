@@ -1,6 +1,6 @@
 import type RandomDotOrgParams from "../types/random-dot-org/RandomDotOrgParams.js";
 import type RandomDotOrgRequest from "../types/random-dot-org/RandomDotOrgRequest.js";
-import type RandomDotOrgResponse from "../types/random-dot-org/RandomDotOrgResponse.js";
+import type { RandomDotOrgResponse } from "../types/random-dot-org/RandomDotOrgResponse.js";
 import type { RequestInit } from "node-fetch";
 import fetch from "node-fetch";
 import reviveJson from "../util/reviveJson.js";
@@ -27,10 +27,17 @@ export default async function fetchFromRandomDotOrg<T extends keyof RandomDotOrg
 	};
 
 	const response = await fetch(url, init);
-	if (response.status < httpErrorThreshold) {
-		const text = await response.text();
-		return JSON.parse(text, reviveJson) as RandomDotOrgResponse<T>;
-	} else {
+	if (response.status >= httpErrorThreshold) {
 		throw new Error(`(fetchFromRandomDotOrg) HTTP Error ${response.status} - ${response.statusText}`);
+	} else {
+		const text = await response.text();
+		const randomDotOrg = (await JSON.parse(text, reviveJson)) as RandomDotOrgResponse<T>;
+		if (typeof randomDotOrg.error === "undefined") {
+			return randomDotOrg;
+		} else {
+			throw new Error(
+				`(fetchFromRandomDotOrg) Random.org Error ${randomDotOrg.error.code} - ${randomDotOrg.error.message}`,
+			);
+		}
 	}
 }

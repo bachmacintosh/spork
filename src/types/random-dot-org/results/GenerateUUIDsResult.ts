@@ -1,8 +1,8 @@
 import type { BaseCostedResult } from "./BaseCostedResult.js";
 
-export default interface GenerateIntegersResult extends BaseCostedResult {
+export default interface GenerateUUIDsResult extends BaseCostedResult {
 	random: {
-		data: number[] | string[];
+		data: string[];
 		completionTime: Date;
 	};
 }
