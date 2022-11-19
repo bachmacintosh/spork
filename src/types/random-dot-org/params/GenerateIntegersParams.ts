@@ -1,19 +1,11 @@
-export default interface GenerateIntegersParams {
-	apiKey: string;
+import type { DatedRandomization, StringedRandomization, ValidBases } from "../Base.js";
+import type BaseParams from "./BaseParams.js";
+
+export default interface GenerateIntegersParams extends BaseParams {
 	n: number;
 	min: number;
 	max: number;
 	replacement?: boolean;
 	base?: ValidBases;
 	pregeneratedRandomization?: DatedRandomization | StringedRandomization | null;
-}
-
-type ValidBases = 2 | 8 | 10 | 16;
-
-interface DatedRandomization {
-	date: string;
-}
-
-interface StringedRandomization {
-	id: string;
 }

@@ -1,8 +1,8 @@
 import type { BaseCostedResult } from "./BaseCostedResult.js";
 
-export default interface GenerateIntegersResult extends BaseCostedResult {
+export default interface GenerateDecimalFractionsResult extends BaseCostedResult {
 	random: {
-		data: number[] | string[];
+		data: number[];
 		completionTime: Date;
 	};
 }
